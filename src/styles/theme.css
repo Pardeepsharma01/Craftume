@@ -8,37 +8,38 @@
 
 :root {
   /* ─────────────────────────────────────────────
-   * Colors — Light mode (indigo/violet SaaS palette)
+   * Colors — Dark Aurora palette (synced with globals.css :root)
+   * All values are bare HSL triplets — tailwind.config.ts wraps with hsl().
    * ───────────────────────────────────────────── */
 
-  /* Primary — indigo 600 */
-  --color-primary: 243 75% 59%;
-  --color-primary-hover: 243 75% 52%;
+  /* Primary — violet #7C3AED */
+  --color-primary: 263 80% 57%;
+  --color-primary-hover: 263 80% 50%;
 
-  /* Secondary — violet 500 */
-  --color-secondary: 262 83% 58%;
+  /* Secondary — cyan #06B6D4 */
+  --color-secondary: 189 94% 43%;
 
-  /* Accent — fuchsia 500 */
-  --color-accent: 292 84% 61%;
+  /* Accent — fuchsia #D946EF */
+  --color-accent: 292 91% 61%;
 
-  /* Backgrounds */
-  --color-bg: 240 10% 98%;
-  --color-surface: 0 0% 100%;
-  --color-surface-alt: 240 8% 95%;
+  /* Backgrounds — near-black scale */
+  --color-bg: 240 6% 4%;           /* #09090B — matches --background */
+  --color-surface: 240 5% 7%;      /* #0F0F12 — matches --card */
+  --color-surface-alt: 240 4% 11%; /* slightly lighter surface layer */
 
   /* Text */
-  --color-text: 222 20% 18%;
-  --color-text-muted: 220 13% 46%;
-  --color-heading: 222 32% 12%;
+  --color-text: 0 0% 100%;         /* #FFFFFF — matches --foreground */
+  --color-text-muted: 240 5% 65%;  /* #A1A1AA — matches --muted-foreground */
+  --color-heading: 0 0% 100%;      /* pure white headings */
 
-  /* Border */
-  --color-border: 220 13% 87%;
+  /* Border — HSL approx of rgba(255,255,255,0.08) on near-black */
+  --color-border: 240 6% 18%;      /* matches --border */
 
-  /* Semantic */
-  --color-success: 142 71% 45%;
-  --color-warning: 38 92% 50%;
-  --color-error: 0 84% 60%;
-  --color-info: 199 89% 48%;
+  /* Semantic — boosted for dark-bg legibility */
+  --color-success: 142 71% 48%;
+  --color-warning: 38 92% 52%;
+  --color-error: 0 84% 62%;
+  --color-info: 199 89% 52%;
 
   /* ─────────────────────────────────────────────
    * Border Radius
@@ -53,10 +54,10 @@
   /* ─────────────────────────────────────────────
    * Shadows
    * ───────────────────────────────────────────── */
-  --shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-  --shadow-xl:  0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+  --shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  --shadow-xl:  0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.25);
 
   /* ─────────────────────────────────────────────
    * Motion / Transitions

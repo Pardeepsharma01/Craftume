@@ -2,6 +2,12 @@
 
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import {
+  fadeUp,
+  staggerContainer,
+  cardHover,
+  viewportOnce,
+} from "@/lib/motion-variants";
 
 /**
  * PLACEHOLDER testimonials — replace with real customer quotes before launch.
@@ -56,48 +62,52 @@ export function Testimonials() {
     <section
       id="testimonials"
       aria-labelledby="testimonials-heading"
-      className="bg-craftume-bg py-24 sm:py-32"
+      className="bg-transparent py-24 sm:py-32"
     >
       <div className="mx-auto max-w-container px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
           className="mx-auto max-w-2xl text-center"
         >
-          <p className="text-sm font-semibold uppercase tracking-widest text-craftume-primary">
+          <p className="text-sm font-semibold uppercase tracking-widest text-primary">
             Early adopters
           </p>
           <h2
             id="testimonials-heading"
-            className="mt-2 text-3xl font-bold tracking-tight text-craftume-heading sm:text-4xl"
+            className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
           >
             Loved by job seekers
           </h2>
-          <p className="mt-4 text-craftume-text-muted">
+          <p className="mt-4 text-muted-foreground">
             Here&apos;s what early users had to say about Craftume.
           </p>
         </motion.div>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {TESTIMONIALS.map((t, i) => (
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportOnce}
+          className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          {TESTIMONIALS.map((t) => (
             <motion.figure
               key={t.id}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.45, delay: i * 0.1, ease: "easeOut" }}
-              className="flex flex-col gap-5 rounded-xl border border-craftume-border bg-craftume-surface p-6 shadow-sm"
+              variants={fadeUp}
+              {...cardHover}
+              className="flex flex-col gap-5 rounded-3xl border border-border bg-card/50 backdrop-blur-xl p-6 shadow-sm transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_hsl(var(--primary)/0.25)]"
             >
               <StarRating count={t.rating} />
-              <blockquote className="flex-1 text-sm text-craftume-text leading-relaxed">
+              <blockquote className="flex-1 text-sm text-foreground leading-relaxed">
                 &ldquo;{t.quote}&rdquo;
               </blockquote>
-              <figcaption className="flex items-center gap-3 border-t border-craftume-border pt-4">
+              <figcaption className="flex items-center gap-3 border-t border-border pt-4">
                 {/* Avatar initials placeholder */}
                 <div
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-craftume-primary/15 text-xs font-bold text-craftume-primary"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary"
                   aria-hidden="true"
                 >
                   {t.name
@@ -106,17 +116,17 @@ export function Testimonials() {
                     .join("")}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-craftume-heading">
+                  <p className="text-sm font-semibold text-foreground">
                     {t.name}
                   </p>
-                  <p className="text-xs text-craftume-text-muted">
+                  <p className="text-xs text-muted-foreground">
                     {t.role} · {t.company}
                   </p>
                 </div>
               </figcaption>
             </motion.figure>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
