@@ -1,0 +1,111 @@
+/**
+ * Craftume Design Tokens
+ * ======================
+ * Single source of truth for all design variables.
+ * All Tailwind color utilities map to these via tailwind.config.ts.
+ * Do NOT hardcode hex/rgb colors anywhere else in the project.
+ */
+
+:root {
+  /* ─────────────────────────────────────────────
+   * Colors — Light mode (indigo/violet SaaS palette)
+   * ───────────────────────────────────────────── */
+
+  /* Primary — indigo 600 */
+  --color-primary: 243 75% 59%;
+  --color-primary-hover: 243 75% 52%;
+
+  /* Secondary — violet 500 */
+  --color-secondary: 262 83% 58%;
+
+  /* Accent — fuchsia 500 */
+  --color-accent: 292 84% 61%;
+
+  /* Backgrounds */
+  --color-bg: 240 10% 98%;
+  --color-surface: 0 0% 100%;
+  --color-surface-alt: 240 8% 95%;
+
+  /* Text */
+  --color-text: 222 20% 18%;
+  --color-text-muted: 220 13% 46%;
+  --color-heading: 222 32% 12%;
+
+  /* Border */
+  --color-border: 220 13% 87%;
+
+  /* Semantic */
+  --color-success: 142 71% 45%;
+  --color-warning: 38 92% 50%;
+  --color-error: 0 84% 60%;
+  --color-info: 199 89% 48%;
+
+  /* ─────────────────────────────────────────────
+   * Border Radius
+   * ───────────────────────────────────────────── */
+  --radius-xs: 0.125rem;   /* 2px  */
+  --radius-sm: 0.25rem;    /* 4px  */
+  --radius-md: 0.5rem;     /* 8px  */
+  --radius-lg: 0.75rem;    /* 12px */
+  --radius-xl: 1rem;       /* 16px */
+  --radius-full: 9999px;
+
+  /* ─────────────────────────────────────────────
+   * Shadows
+   * ───────────────────────────────────────────── */
+  --shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  --shadow-xl:  0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+
+  /* ─────────────────────────────────────────────
+   * Motion / Transitions
+   * ───────────────────────────────────────────── */
+  --transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow:   400ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ─────────────────────────────────────────────
+   * Layout
+   * ───────────────────────────────────────────── */
+  --container-width: 1280px;
+  --sidebar-width:   260px;
+  --navbar-height:   64px;
+
+  /* ─────────────────────────────────────────────
+   * Typography
+   * ───────────────────────────────────────────── */
+  --font-heading: "Inter", "Geist", system-ui, sans-serif;
+  --font-body:    "Inter", "Geist", system-ui, sans-serif;
+}
+
+/* ─────────────────────────────────────────────
+ * Dark mode overrides
+ * ───────────────────────────────────────────── */
+.dark {
+  --color-primary: 243 75% 65%;
+  --color-primary-hover: 243 75% 72%;
+
+  --color-secondary: 262 83% 65%;
+  --color-accent: 292 84% 68%;
+
+  --color-bg: 222 32% 8%;
+  --color-surface: 222 28% 11%;
+  --color-surface-alt: 222 24% 15%;
+
+  --color-text: 220 15% 90%;
+  --color-text-muted: 220 10% 55%;
+  --color-heading: 220 20% 96%;
+
+  --color-border: 220 14% 22%;
+
+  --color-success: 142 71% 50%;
+  --color-warning: 38 92% 55%;
+  --color-error: 0 84% 65%;
+  --color-info: 199 89% 55%;
+
+  --shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.35), 0 2px 4px -2px rgb(0 0 0 / 0.25);
+  --shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.35), 0 4px 6px -4px rgb(0 0 0 / 0.25);
+  --shadow-xl:  0 20px 25px -5px rgb(0 0 0 / 0.35), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+}
