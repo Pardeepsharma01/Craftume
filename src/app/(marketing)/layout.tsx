@@ -3,7 +3,11 @@ import { AuroraBackground } from "@/components/ui/aurora-background";
 /**
  * (marketing) route group layout
  * ================================
- * Renders the fixed background aurora and wraps marketing page content.
+ * AuroraBackground is fixed at z-[1] (above body background).
+ * Content lives inside <main> at z-10 (above aurora blobs).
+ *
+ * IMPORTANT: The layout div must NOT have an explicit z-index — setting z-0
+ * creates a stacking context that can interfere with the fixed aurora layer.
  */
 export default function MarketingLayout({
   children,
@@ -11,9 +15,12 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative min-h-screen bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary">
+    <div className="relative min-h-screen text-foreground antialiased selection:bg-primary/20 selection:text-primary">
       <AuroraBackground />
-      {children}
+      {/* z-10 ensures all page content sits above the aurora blobs (z-[1]) */}
+      <main className="relative z-10">
+        {children}
+      </main>
     </div>
   );
 }
