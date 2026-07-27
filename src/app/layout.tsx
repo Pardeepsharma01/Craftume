@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { ReduxProvider } from "@/components/providers";
+import { AuthListener } from "@/features/auth/components/AuthListener";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -34,7 +35,10 @@ export default function RootLayout({
           defaultTheme="dark"
           disableTransitionOnChange
         >
-          <ReduxProvider>{children}</ReduxProvider>
+          <ReduxProvider>
+            <AuthListener />
+            {children}
+          </ReduxProvider>
         </ThemeProvider>
       </body>
     </html>

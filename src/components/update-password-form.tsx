@@ -1,17 +1,11 @@
-﻿"use client";
+"use client";
 
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { fadeUp } from "@/lib/motion-variants";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -33,7 +27,7 @@ export function UpdatePasswordForm({
     try {
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
+      // User already has an active session after updating password
       router.push("/protected");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
@@ -43,36 +37,58 @@ export function UpdatePasswordForm({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Reset Your Password</CardTitle>
-          <CardDescription>
-            Please enter your new password below.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleForgotPassword}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="password">New password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="New password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Saving..." : "Save new password"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <motion.div variants={fadeUp} initial="hidden" animate="visible">
+      <div
+        className={cn(
+          "flex flex-col gap-6 rounded-3xl border border-border bg-card/50 backdrop-blur-xl p-8 shadow-2xl",
+          className,
+        )}
+        {...props}
+      >
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Set new password
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Choose a strong password for your account
+          </p>
+        </div>
+
+        <form onSubmit={handleForgotPassword} className="flex flex-col gap-5">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="update-password">New Password</Label>
+            <Input
+              id="update-password"
+              type="password"
+              placeholder="Minimum 6 characters"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          {error && (
+            <p className="rounded-lg bg-destructive/10 border border-destructive/30 px-3 py-2 text-sm text-destructive">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="
+              w-full rounded-full px-6 py-2.5 text-sm font-semibold text-white
+              bg-gradient-to-r from-primary to-secondary
+              transition-all duration-300
+              hover:scale-105 hover:shadow-lg hover:shadow-primary/25
+              active:scale-[0.98]
+              disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100
+            "
+          >
+            {isLoading ? "Saving…" : "Save new password"}
+          </button>
+        </form>
+      </div>
+    </motion.div>
   );
 }
