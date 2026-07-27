@@ -1,17 +1,11 @@
-﻿"use client";
+"use client";
 
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { fadeUp } from "@/lib/motion-variants";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -31,7 +25,9 @@ export function ForgotPasswordForm({
     setError(null);
 
     try {
-      // The url which will be included in the email. This URL needs to be configured in your redirect URLs in the Supabase dashboard at https://supabase.com/dashboard/project/_/auth/url-configuration
+      // The url which will be included in the email. This URL needs to be
+      // configured in your redirect URLs in the Supabase dashboard at
+      // https://supabase.com/dashboard/project/_/auth/url-configuration
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/auth/update-password`,
       });
@@ -45,61 +41,93 @@ export function ForgotPasswordForm({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      {success ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Check Your Email</CardTitle>
-            <CardDescription>Password reset instructions sent</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
+    <motion.div variants={fadeUp} initial="hidden" animate="visible">
+      <div
+        className={cn(
+          "flex flex-col gap-6 rounded-3xl border border-border bg-card/50 backdrop-blur-xl p-8 shadow-2xl",
+          className,
+        )}
+        {...props}
+      >
+        {success ? (
+          <>
+            <div className="flex flex-col gap-1">
+              <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+                Check your email
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Password reset instructions sent
+              </p>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
               If you registered using your email and password, you will receive
-              a password reset email.
+              a password reset email shortly.
             </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Reset Your Password</CardTitle>
-            <CardDescription>
-              Type in your email and we&apos;ll send you a link to reset your
-              password
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleForgotPassword}>
-              <div className="flex flex-col gap-6">
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="m@example.com"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                {error && <p className="text-sm text-red-500">{error}</p>}
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Sending..." : "Send reset email"}
-                </Button>
+            <Link
+              href="/auth/login"
+              className="text-center text-sm text-primary hover:text-primary/80 font-medium transition-colors"
+            >
+              ← Back to sign in
+            </Link>
+          </>
+        ) : (
+          <>
+            <div className="flex flex-col gap-1">
+              <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+                Reset your password
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Enter your email and we&apos;ll send you a reset link
+              </p>
+            </div>
+
+            <form onSubmit={handleForgotPassword} className="flex flex-col gap-5">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="forgot-email">Email</Label>
+                <Input
+                  id="forgot-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
-              <div className="mt-4 text-center text-sm">
-                Already have an account?{" "}
-                <Link
-                  href="/auth/login"
-                  className="underline underline-offset-4"
-                >
-                  Login
-                </Link>
-              </div>
+
+              {error && (
+                <p className="rounded-lg bg-destructive/10 border border-destructive/30 px-3 py-2 text-sm text-destructive">
+                  {error}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="
+                  w-full rounded-full px-6 py-2.5 text-sm font-semibold text-white
+                  bg-gradient-to-r from-primary to-secondary
+                  transition-all duration-300
+                  hover:scale-105 hover:shadow-lg hover:shadow-primary/25
+                  active:scale-[0.98]
+                  disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100
+                "
+              >
+                {isLoading ? "Sending…" : "Send reset email"}
+              </button>
             </form>
-          </CardContent>
-        </Card>
-      )}
-    </div>
+
+            <p className="text-center text-sm text-muted-foreground">
+              Remembered it?{" "}
+              <Link
+                href="/auth/login"
+                className="text-primary hover:text-primary/80 font-medium transition-colors"
+              >
+                Sign in
+              </Link>
+            </p>
+          </>
+        )}
+      </div>
+    </motion.div>
   );
 }
