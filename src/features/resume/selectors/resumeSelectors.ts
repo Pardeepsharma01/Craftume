@@ -26,3 +26,7 @@ export const selectIsDirty = (state: RootState) => state.resume.isDirty;
 export const selectIsSaving = (state: RootState) => state.resume.isSaving;
 
 export const selectLastSavedAt = (state: RootState) => state.resume.lastSavedAt;
+
+export const selectResumeId = (state: RootState) => state.resume.resumeId;
+
+export const selectSaveError = (state: RootState) => state.resume.saveError;

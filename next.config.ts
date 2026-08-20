@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  cacheComponents: true,
   // react-pdf tries to import 'canvas' as a server-side rendering fallback.
   // Since we use PDFDownloadLink only on the client (dynamic import, ssr:false),
   // we alias 'canvas' to false so it doesn't cause build/server errors.

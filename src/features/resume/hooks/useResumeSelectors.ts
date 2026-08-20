@@ -6,6 +6,8 @@ import {
   selectIsDirty,
   selectIsSaving,
   selectLastSavedAt,
+  selectResumeId,
+  selectSaveError,
 } from "../selectors/resumeSelectors";
 
 export function useResumeSelectors() {
@@ -15,6 +17,8 @@ export function useResumeSelectors() {
   const isDirty = useAppSelector(selectIsDirty);
   const isSaving = useAppSelector(selectIsSaving);
   const lastSavedAt = useAppSelector(selectLastSavedAt);
+  const resumeId = useAppSelector(selectResumeId);
+  const saveError = useAppSelector(selectSaveError);
 
   return {
     currentResume,
@@ -23,5 +27,7 @@ export function useResumeSelectors() {
     isDirty,
     isSaving,
     lastSavedAt,
+    resumeId,
+    saveError,
   };
 }

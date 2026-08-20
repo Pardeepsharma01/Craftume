@@ -7,16 +7,27 @@ import type {
 
 export interface ResumeState {
   currentResume: ResumeData | null;
+  /**
+   * resumeId: the database row id for the currently loaded resume.
+   * We use the same value as ResumeData.id (single source of truth — no
+   * separate client vs DB ID to track). Set after first successful create,
+   * cleared on resetResume.
+   */
+  resumeId: string | null;
   isDirty: boolean;
   isSaving: boolean;
   lastSavedAt: string | null;
+  /** Non-null when the last autosave/manual save failed — displayed in UI. */
+  saveError: string | null;
 }
 
 const initialState: ResumeState = {
   currentResume: null,
+  resumeId: null,
   isDirty: false,
   isSaving: false,
   lastSavedAt: null,
+  saveError: null,
 };
 
 /**
@@ -38,8 +49,26 @@ const resumeSlice = createSlice({
   reducers: {
     setResume(state, action: PayloadAction<ResumeData>) {
       state.currentResume = action.payload;
+      // If it's sample data (not saved in DB yet), resumeId is null until first autosave.
+      // Otherwise, set resumeId to match action.payload.id.
+      state.resumeId = action.payload.isSampleData ? null : action.payload.id;
       state.isDirty = false;
       state.isSaving = false;
+      state.saveError = null;
+    },
+
+    /**
+     * Set the DB row id after a successful create or when loading an
+     * existing resume. Since ResumeData.id === DB row id, this doubles
+     * as the resumeId — we store it explicitly in state so selectors/hooks
+     * can read it without deriving from currentResume (which may be null).
+     */
+    setResumeId(state, action: PayloadAction<string>) {
+      state.resumeId = action.payload;
+    },
+
+    setSaveError(state, action: PayloadAction<string | null>) {
+      state.saveError = action.payload;
     },
 
     updatePersonalInfo(state, action: PayloadAction<Partial<PersonalInfo>>) {
@@ -139,6 +168,7 @@ const resumeSlice = createSlice({
     markClean(state) {
       state.isDirty = false;
       state.lastSavedAt = new Date().toISOString();
+      state.saveError = null;
     },
 
     setSaving(state, action: PayloadAction<boolean>) {
@@ -147,15 +177,19 @@ const resumeSlice = createSlice({
 
     resetResume(state) {
       state.currentResume = null;
+      state.resumeId = null;
       state.isDirty = false;
       state.isSaving = false;
       state.lastSavedAt = null;
+      state.saveError = null;
     },
   },
 });
 
 export const {
   setResume,
+  setResumeId,
+  setSaveError,
   updatePersonalInfo,
   addSection,
   removeSection,

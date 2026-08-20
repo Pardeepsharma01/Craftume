@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -17,18 +18,36 @@ import {
   cardHover,
   buttonTap,
 } from "@/lib/motion-variants";
-
 import { useHasMounted } from "@/hooks/useHasMounted";
+import { getUserResumes } from "@/features/resume/services/resumeService";
 
 export default function ProtectedDashboardPage() {
   const user = useAppSelector((state) => state.auth.user);
   const hasMounted = useHasMounted();
   const displayName = hasMounted ? (user?.name || user?.email || "User") : "User";
 
+  // Real resume count & latest ID — fetched from Supabase on mount
+  const [resumeCount, setResumeCount] = useState<number | null>(null);
+  const [latestResumeId, setLatestResumeId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    getUserResumes(user.id).then(({ data }) => {
+      if (data && data.length > 0) {
+        setResumeCount(data.length);
+        setLatestResumeId(data[0].id);
+      } else {
+        setResumeCount(0);
+        setLatestResumeId(null);
+      }
+    });
+  }, [user?.id]);
+
   const stats = [
     {
       title: "Resumes Created",
-      value: "0",
+      // Show a loading dash while fetch is in-flight, then the real count
+      value: resumeCount === null ? "—" : String(resumeCount),
       description: "Drafts and completed resumes",
       icon: FileText,
       color: "from-blue-500/20 to-indigo-500/20 text-blue-400",
@@ -115,7 +134,7 @@ export default function ProtectedDashboardPage() {
         </h2>
 
         <div className="grid gap-6 md:grid-cols-2">
-          {/* Action 1: Create Resume */}
+          {/* Action 1: Create or Continue Editing Resume */}
           <motion.div
             {...cardHover}
             className="group relative overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-br from-card/60 via-card/40 to-primary/5 backdrop-blur-xl p-6 shadow-xl"
@@ -126,24 +145,45 @@ export default function ProtectedDashboardPage() {
                   <FileText className="h-6 w-6" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground">
-                  Create Your First Resume
+                  {latestResumeId ? "Continue Editing Resume" : "Create Your First Resume"}
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Start with AI-driven content generation tailored to your target position and experience level.
+                  {latestResumeId
+                    ? "Pick up where you left off on your latest resume draft or create a new one."
+                    : "Start with AI-driven content generation tailored to your target position and experience level."}
                 </p>
               </div>
 
-              <div>
+              <div className="flex flex-wrap items-center gap-3">
                 <motion.div {...buttonTap} className="inline-block">
                   <Link
-                    href="/protected/resume/new"
+                    href={latestResumeId ? `/protected/resume/${latestResumeId}` : "/protected/resume/new"}
                     className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-secondary px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-[0_0_25px_hsl(var(--primary)/0.4)]"
                   >
-                    <Plus className="h-4 w-4" />
-                    <span>Create Resume</span>
+                    {latestResumeId ? (
+                      <>
+                        <FileText className="h-4 w-4" />
+                        <span>Continue Editing</span>
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="h-4 w-4" />
+                        <span>Create Resume</span>
+                      </>
+                    )}
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </motion.div>
+
+                {latestResumeId && (
+                  <Link
+                    href="/protected/resume/new"
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-border/80 bg-card/40 hover:bg-card/70 px-4 py-2.5 text-xs font-semibold text-foreground transition-all"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    <span>Create New</span>
+                  </Link>
+                )}
               </div>
             </div>
           </motion.div>

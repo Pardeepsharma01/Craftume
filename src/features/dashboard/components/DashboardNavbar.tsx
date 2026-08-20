@@ -1,10 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { Sparkles, User, Settings, LogOut, FileText, CheckCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentResume, selectResumeId } from "@/features/resume/selectors/resumeSelectors";
+import { getUserResumes } from "@/features/resume/services/resumeService";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,6 +25,25 @@ export function DashboardNavbar() {
   const user = useAppSelector((state) => state.auth.user);
   const hasMounted = useHasMounted();
 
+  // Active resume ID from Redux or DB
+  const currentResume = useAppSelector(selectCurrentResume);
+  const activeResumeId = useAppSelector(selectResumeId) || (currentResume && !currentResume.isSampleData ? currentResume.id : null);
+  const [navResumeId, setNavResumeId] = useState<string | null>(activeResumeId);
+
+  useEffect(() => {
+    if (activeResumeId) {
+      setNavResumeId(activeResumeId);
+      return;
+    }
+    if (user?.id) {
+      getUserResumes(user.id).then(({ data }) => {
+        if (data && data.length > 0) {
+          setNavResumeId(data[0].id);
+        }
+      });
+    }
+  }, [activeResumeId, user?.id]);
+
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
@@ -35,9 +57,11 @@ export function DashboardNavbar() {
   const userEmail = hasMounted ? (user?.email || "No email available") : "No email available";
   const initial = hasMounted ? displayName.charAt(0).toUpperCase() : "U";
 
+  const resumeHref = navResumeId ? `/protected/resume/${navResumeId}` : "/protected/resume/new";
+
   const navLinks = [
     { label: "Dashboard", href: "/protected", icon: Sparkles },
-    { label: "Resumes", href: "/protected/resume/new", icon: FileText },
+    { label: "Resumes", href: resumeHref, icon: FileText },
     { label: "ATS Checker", href: "/protected/ats", icon: CheckCircle },
   ];
 
@@ -61,7 +85,9 @@ export function DashboardNavbar() {
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive =
+                pathname === link.href ||
+                (link.label === "Resumes" && pathname.startsWith("/protected/resume"));
               const Icon = link.icon;
               return (
                 <Link
